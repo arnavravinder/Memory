@@ -9,9 +9,17 @@
 <body>
   <div class="container">
     <h1>Memory Game</h1>
+    <div class="stats">
+      <span id="time">Time: 0s</span>
+      <span id="score">Score: 0</span>
+    </div>
     <div class="game-board" id="gameBoard"></div>
     <button id="restartBtn">Restart Game</button>
   </div>
   <script src="script.js"></script>
+  <audio id="flipSound" src="flip.mp3"></audio>
+<audio id="matchSound" src="match.mp3"></audio>
+<audio id="winSound" src="win.mp3"></audio>
+
 </body>
 </html>
