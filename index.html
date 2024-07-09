@@ -13,15 +13,15 @@
       <span id="time">Time: 0s</span>
       <span id="score">Score: 0</span>
       <span id="countdown">Time left: 60s</span>
+      <button id="easyBtn" aria-label="Easy Difficulty">Easy</button>
+<button id="mediumBtn" aria-label="Medium Difficulty">Medium</button>
+<button id="hardBtn" aria-label="Hard Difficulty">Hard</button>
+
       <span id="highScore">High Score: 0</span>
     </div>
-    <div class="game-board" id="gameBoard"></div>
-    <button id="restartBtn">Restart Game</button>
+    <div class="game-board" id="gameBoard" role="grid"></div>
+    <button id="restartBtn" aria-label="Restart Game">Restart Game</button>
   </div>
   <script src="script.js"></script>
-  <audio id="flipSound" src="flip.mp3"></audio>
-<audio id="matchSound" src="match.mp3"></audio>
-<audio id="winSound" src="win.mp3"></audio>
-
 </body>
 </html>
