@@ -86,44 +86,128 @@ shuffleEmojis();
 createBoard();
 startTimer();
 restartBtn.addEventListener('click', restartGame);
-const flipSound = document.getElementById('flipSound');
-const matchSound = document.getElementById('matchSound');
-const winSound = document.getElementById('winSound');
-
-const flipCard = (e) => {
-  const clickedCard = e.target;
-  const cardIndex = clickedCard.getAttribute('data-index');
-  if (flippedCards.length < 2 && !clickedCard.classList.contains('flipped')) {
-    flipSound.play();
-    clickedCard.classList.add('flipped');
-    clickedCard.textContent = shuffledEmojis[cardIndex];
-    flippedCards.push(clickedCard);
-    if (flippedCards.length === 2) {
-      setTimeout(checkForMatch, 1000);
+const matchcheck = () => {
+    const [card1, card2] = flippedCards;
+    if (card1.textContent === card2.textContent) {
+      matchSound.play();
+      matchedPairs++;
+      score += 10;
+      scoreDisplay.textContent = `Score: ${score}`;
+      card1.classList.add('correct');
+      card2.classList.add('correct');
+      setTimeout(() => {
+        card1.classList.remove('correct');
+        card2.classList.remove('correct');
+      }, 500);
+      flippedCards = [];
+      if (matchedPairs === emojis.length / 2) {
+        clearInterval(timerInterval);
+        winSound.play();
+        setTimeout(() => alert('You won!'), 500);
+      }
+    } else {
+      card1.classList.add('wrong');
+      card2.classList.add('wrong');
+      setTimeout(() => {
+        card1.classList.remove('wrong');
+        card2.classList.remove('wrong');
+        card1.classList.remove('flipped');
+        card2.classList.remove('flipped');
+        card1.textContent = '';
+        card2.textContent = '';
+        flippedCards = [];
+      }, 500);
     }
+  };
+  const countdownDisplay = document.getElementById('countdown');
+let countdownTime = 60;
+let countdownInterval;
+
+const startCountdown = () => {
+  countdownTime = 60;
+  countdownDisplay.textContent = `Time left: ${countdownTime}s`;
+  countdownInterval = setInterval(() => {
+    countdownTime--;
+    countdownDisplay.textContent = `Time left: ${countdownTime}s`;
+    if (countdownTime === 0) {
+      clearInterval(countdownInterval);
+      clearInterval(timerInterval);
+      setTimeout(() => alert('Game Over!'), 500);
+    }
+  }, 1000);
+};
+
+const restartgame = () => {
+  matchedPairs = 0;
+  flippedCards = [];
+  score = 0;
+  scoreDisplay.textContent = `Score: ${score}`;
+  clearInterval(timerInterval);
+  clearInterval(countdownInterval);
+  shuffleEmojis();
+  createBoard();
+  startTimer();
+  startCountdown();
+};
+
+shuffleEmojis();
+createBoard();
+startTimer();
+startCountdown();
+restartBtn.addEventListener('click', restartGame);
+const highScoreDisplay = document.getElementById('highScore');
+let highScore = 0;
+
+const updateHighScore = () => {
+  if (score > highScore) {
+    highScore = score;
+    highScoreDisplay.textContent = `High Score: ${highScore}`;
+    localStorage.setItem('highScore', highScore);
   }
 };
 
-const checkForMatch = () => {
+const loadHighScore = () => {
+  const savedHighScore = localStorage.getItem('highScore');
+  if (savedHighScore) {
+    highScore = parseInt(savedHighScore, 10);
+    highScoreDisplay.textContent = `High Score: ${highScore}`;
+  }
+};
+
+const checkMatch = () => {
   const [card1, card2] = flippedCards;
   if (card1.textContent === card2.textContent) {
     matchSound.play();
     matchedPairs++;
     score += 10;
     scoreDisplay.textContent = `Score: ${score}`;
-    card1.style.backgroundColor = '#00cc66';
-    card2.style.backgroundColor = '#00cc66';
+    card1.classList.add('correct');
+    card2.classList.add('correct');
+    setTimeout(() => {
+      card1.classList.remove('correct');
+      card2.classList.remove('correct');
+    }, 500);
     flippedCards = [];
     if (matchedPairs === emojis.length / 2) {
       clearInterval(timerInterval);
+      clearInterval(countdownInterval);
       winSound.play();
+      updateHighScore();
       setTimeout(() => alert('You won!'), 500);
     }
   } else {
-    card1.classList.remove('flipped');
-    card2.classList.remove('flipped');
-    card1.textContent = '';
-    card2.textContent = '';
-    flippedCards = [];
+    card1.classList.add('wrong');
+    card2.classList.add('wrong');
+    setTimeout(() => {
+      card1.classList.remove('wrong');
+      card2.classList.remove('wrong');
+      card1.classList.remove('flipped');
+      card2.classList.remove('flipped');
+      card1.textContent = '';
+      card2.textContent = '';
+      flippedCards = [];
+    }, 500);
   }
 };
+
+loadHighScore();
