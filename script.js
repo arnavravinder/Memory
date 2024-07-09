@@ -16,6 +16,7 @@ const createBoard = () => {
     const card = document.createElement('div');
     card.classList.add('card');
     card.setAttribute('data-index', index);
+    card.setAttribute('data-aos', 'zoom-in');
     card.addEventListener('click', flipCard);
     gameBoard.appendChild(card);
   });
@@ -63,3 +64,12 @@ const restartGame = () => {
 shuffleEmojis();
 createBoard();
 restartBtn.addEventListener('click', restartGame);
+
+VanillaTilt.init(document.querySelectorAll(".card"), {
+  max: 25,
+  speed: 400,
+  glare: true,
+  "max-glare": 0.5,
+});
+
+AOS.init();
